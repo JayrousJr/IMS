@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+* {
+    font-family: "inter", "sans-serif";
+}
+
+/* 
+.nav-link{
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid black;
+    right: -3px;
+    top: 9px;
+}absolute rounded-full border-2 border-slate-500 -right-3 top-9 w-7 h-7 cursor-pointer */
