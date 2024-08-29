@@ -16,4 +16,8 @@ class Products extends Model
         "description",
         "expiry_date",
     ];
+
+    public function productCategory() {
+        return $this->belongsTo(Category::class,"category_id","id");
+    }
 }

@@ -7,13 +7,13 @@ export default function Button({
     return (
         <button
             {...props}
-            className={`inline-flex items-center px-4 py-2 bg-secondary border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:opacity-80  dark:active:bg-gray-300 focus:outline-none transition ease-in-out duration-150 ${
+            className={`inline-flex items-center px-4 py-2 bg-primary bg-secondary border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:opacity-80   focus:outline-none transition ease-in-out duration-150 ${
                 disabled && "opacity-25"
             }  ${
                 className === "danger"
-                    ? "bg-red-700 text-black hover:opacity-90"
+                    ? "bg-red-700 text-dark-100 hover:opacity-90"
                     : className === "warning"
-                    ? "bg-orange-5s00 hover:opacity-90"
+                    ? "bg-orange-500 hover:opacity-90"
                     : ""
             }`}
             disabled={disabled}

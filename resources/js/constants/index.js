@@ -10,14 +10,14 @@ export const sideNav = [
         icon: "HiOutlineSquares2X2",
     },
     {
-        title: "Sales",
-        path: route("sale.index"),
-        icon: "HiOutlineCurrencyDollar",
-    },
-    {
         title: "Products",
         path: route("product.index"),
         icon: "HiOutlineShoppingBag",
+    },
+    {
+        title: "Sales",
+        path: route("sale.index"),
+        icon: "HiOutlineCurrencyDollar",
     },
     {
         title: "Stock",

@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Products;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreProductsRequest;
+use App\Http\Requests\UpdateProductsRequest;
+use App\Http\Resources\CategoriesResource;
+use App\Http\Resources\ProductResource;
+use App\Models\Category;
 
 class ProductController extends Controller
 {
@@ -12,7 +16,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return inertia("system/Products");
+        $product = Products::query()->latest()->paginate(5);
+        return inertia("Resources/ProductResource/ProductsList",[
+            "product" => ProductResource::collection($product),
+        ]);
     }
 
     /**
@@ -20,23 +27,33 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::query()->latest()->get();
+        return inertia("Resources/ProductResource/ProductCreate",[
+            "categories" => CategoriesResource::collection($categories),
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreProductsRequest $request)
     {
-        //
+        $data = $request->validated();
+        $data = Products::create($data);
+        return to_route("product.index")->with("success", "Product has been created successifully");
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Products $products)
+    public function show($id)
     {
-        //
+        $categories = Category::query()->latest()->get();
+        $product = Products::findOrFail($id);
+        return inertia("Resources/ProductResource/ProductView",[
+            "categories" => CategoriesResource::collection($categories),
+            "product"=>new  ProductResource($product)
+        ]);
     }
 
     /**
@@ -50,9 +67,11 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Products $products)
+    public function update(UpdateProductsRequest $request, $id)
     {
-        //
+         $product = Products::findOrFail($id);
+        $product->update($request->validated());
+        return to_route("product.index")->with("success", "Product has been updated successifully");
     }
 
     /**

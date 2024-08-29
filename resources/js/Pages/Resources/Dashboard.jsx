@@ -6,10 +6,9 @@ import React from "react";
 const Dashboard = () => {
     return (
         <>
-            <Layouts>
+            <Layouts name={"Dashboard"}>
                 <Head title="Dashboard" />
-                <TopNav name={"Dashboard"} />
-                <div className="mt-3 border-t border-secondary opacity-20"/>
+                <div className="mt-3 border-t border-secondary opacity-20" />
                 <div className="bg-tertiary h-full px-8 py-2 mt-2 rounded-xl">
                     Lorem, ipsum dolor sit amet consectetur adipisicing elit.
                     Deleniti enim, possimus deserunt laudantium pariatur labore

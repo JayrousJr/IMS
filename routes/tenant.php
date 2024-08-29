@@ -40,9 +40,11 @@ Route::middleware([
     Route::get("/", [RoutingController::class, "dashboard"])->name("dashboard");
     // Category Routes Starts
     Route::get("/categories", [CategoriesController::class, "index"])->name("category.index");
-    Route::get("/deleteCat/{id}", [CategoriesController::class, "destroy"])->name("category.destroy");
-    Route::get("/view/{id}", [CategoriesController::class, "show"])->name("category.show");
-    Route::post("/createCat", [CategoriesController::class, "store"])->name("category.store");
+    Route::get("/category/{id}", [CategoriesController::class, "destroy"])->name("category.destroy");
+    Route::get("/category/{id}/view", [CategoriesController::class, "show"])->name("category.show");
+    Route::post("/category/save", [CategoriesController::class, "store"])->name("category.store");
+    Route::get("/category/create/new", [CategoriesController::class, "create"])->name("category.create");
+    Route::put("/category/{id}/edit", [CategoriesController::class, "update"])->name("category.update");
     // Category Routes Ends
 
     // Sales Routes Starts
@@ -67,6 +69,12 @@ Route::middleware([
 
     // Products Routes Starts
     Route::get("/products", [ProductController::class, "index"])->name("product.index");
+    Route::get("/product/create", [ProductController::class,"create"])->name("product.create");
+    Route::get("/product/{id}/view", [ProductController::class,"show"])->name("product.show");
+    Route::put("/product/{id}/edit", [ProductController::class,"update"])->name("product.edit");
+    Route::post("/product/save", [ProductController::class,"store"])->name("product.store");
+    Route::get("/product/{id}", [CategoriesController::class, "destroy"])->name("product.destroy");
+
     // Products Routes Ends
 
     // Role Routes Starts

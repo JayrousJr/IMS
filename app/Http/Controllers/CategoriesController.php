@@ -14,9 +14,9 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        $categories = Category::query()->latest()->paginate(5);
+        $categories = Category::query()->latest()->paginate(10);
         return inertia(
-            "system/Categories",
+            "Resources/CategoryResource/Categories",
             [
                 "category" => CategoriesResource::collection($categories)
             ]
@@ -28,7 +28,7 @@ class CategoriesController extends Controller
      */
     public function create()
     {
-        //
+        return inertia("Resources/CategoryResource/CategoryCreate");
     }
 
     /**
@@ -48,9 +48,8 @@ class CategoriesController extends Controller
     public function show($id, Category $category)
     {
         $category = Category::findOrFail($id);
-        dd($category);
         return inertia(
-            "system/Categories",
+            "Resources/CategoryResource/CategoryView",
             [
                 "category" => new CategoriesResource($category)
             ]
@@ -68,16 +67,20 @@ class CategoriesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCategoryRequest $request, Category $category)
+    public function update(UpdateCategoryRequest $request, $id)
     {
-        //
+        $category = Category::findOrFail($id);
+        $category->update($request->validated());
+         return to_route("category.index")->with("success", "Category has been updated successifully");
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category, $id)
+    public function destroy($id)
     {
-        dd($id);
+        $category= Category::findOrFail($id);
+        $category->delete();
+        return to_route("category.index")->with("success", "Category has been deleted successifully");
     }
 }

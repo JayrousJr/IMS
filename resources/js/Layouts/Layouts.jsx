@@ -1,13 +1,18 @@
 import Navigation from "@/component/system/Navigation";
 import TopNav from "@/component/system/TopNav";
+import Notification from "@/Components/Notification";
 const Layouts = ({ children, name }) => {
     return (
         <>
-            <div className="flex w-full overflow-x-hidden relative">
+            <div className="relative flex">
                 <Navigation />
-                <main className="relative flex flex-col h-screen px-6 py-6 ">
-                    <div className="">{children}</div>
-                </main>
+                <div className="w-full  relative">
+                    <TopNav />
+                    <Notification />
+                    <main className="relative w-full flex  flex-col px-6 py-6 bg-dark-100">
+                        <div className="">{children}</div>
+                    </main>
+                </div>
             </div>
         </>
     );
