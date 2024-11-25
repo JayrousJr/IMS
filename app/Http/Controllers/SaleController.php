@@ -34,7 +34,7 @@ class SaleController extends Controller
      */
     public function create()
     {
-        $product = Products::all();
+        $product = Products::query()->where("available_quantity", ">", 0)->latest()->get();
         $customer = Customer::all();
         return inertia("Resources/SalesResource/SaleCreate", [
             "products" => ProductResource::collection($product),
@@ -73,6 +73,11 @@ class SaleController extends Controller
                 "user_id" => $user_id,
             ]);
             foreach ($request->soldProducts as $product) {
+                $productModel = Products::findOrFail($product["product_id"]);
+                $productModel->update([
+                    "available_quantity" => $productModel->available_quantity - $product["quantity"],
+                ]);
+               
                 SaleDetail::create([
                     "sale_id" => $sale->id,
                     "product_id" => $product["product_id"],

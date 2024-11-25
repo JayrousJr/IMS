@@ -122,7 +122,7 @@ const SaleCreate = ({ products, customers }) => {
         handleDiscount();
     }, [data.discount]);
     // handling product quantity selection
-    const [productkQuantity, setProductQuantity] = useState(null);
+    const [productQuantity, setProductQuantity] = useState(null);
     const [quantityError, setQuantityError] = useState([]);
     const [selectedProduct, setSelectedProduct] = useState();
     const [prodIndex, setProdIndex] = useState(null);
@@ -142,31 +142,28 @@ const SaleCreate = ({ products, customers }) => {
         }
     }, [data.soldProducts]);
 
-    // useEffect(() => {
-    //     if (
-    //         parseInt(data.soldProducts[prodIndex]?.quantity) >
-    //         parseInt(productkQuantity)
-    //     ) {
-    //         setQuantityError([
-    //             ...quantityError,
-    //             {
-    //                 index: prodIndex,
-    //                 error: `The Quantity you are trying to enter is greater than ${productkQuantity}`,
-    //             },
-    //         ]);
-    //     } else if (data.soldProducts[prodIndex]?.quantity <= 0) {
-    //         setQuantityError([
-    //             ...quantityError,
-    //             {
-    //                 index: prodIndex,
-    //                 error: `The Quantity you are trying to enter is greater than ${productkQuantity}`,
-    //             },
-    //         ]);
-    //     } else {
-    //         setQuantityError(null);
-    //     }
-    // }, [data.soldProducts[prodIndex]?.quantity, productkQuantity]);
-    // console.log(quantityError);
+    useEffect(() => {
+        if (prodIndex != null) {
+            const updatedErrors = quantityError.filter(
+                (error) => error.index !== prodIndex,
+            );
+            const currentQuantity = data.soldProducts[prodIndex]?.quantity || 0;
+
+            if (currentQuantity > productQuantity) {
+                updatedErrors.push({
+                    index: prodIndex,
+                    error: `Exceded ${productQuantity}`,
+                });
+            } else if (currentQuantity < 1) {
+                updatedErrors.push({
+                    index: prodIndex,
+                    error: "Invalid",
+                });
+            }
+
+            setQuantityError(updatedErrors);
+        }
+    }, [data.soldProducts[prodIndex]?.quantity, productQuantity]);
 
     return (
         <Layouts>
@@ -310,14 +307,28 @@ const SaleCreate = ({ products, customers }) => {
                                     name="quantity"
                                     label="Quantity"
                                     value={handleMinDigit(product.quantity)}
-                                    onChange={(e) =>
+                                    onChange={(e) => {
                                         handleProductChange(
                                             index,
                                             "quantity",
                                             e.target.value,
+                                        );
+                                        const value =
+                                            e.target.value === ""
+                                                ? 0
+                                                : parseFloat(e.target.value);
+                                    }}
+                                    sx={{ gridColumn: "span 1" }}
+                                    helperText={
+                                        quantityError.find(
+                                            (error) => error.index === index,
+                                        )?.error || ""
+                                    }
+                                    error={
+                                        !!quantityError.find(
+                                            (error) => error.index === index,
                                         )
                                     }
-                                    sx={{ gridColumn: "span 1" }}
                                 />
                                 <TextField
                                     fullWidth
@@ -370,7 +381,10 @@ const SaleCreate = ({ products, customers }) => {
                     <SubmitButton
                         title="Create"
                         processing={processing}
-                        disabled={data.soldProducts.length == 0}
+                        disabled={
+                            data.soldProducts.length == 0 ||
+                            quantityError.length > 0
+                        }
                     />
                 </form>
             </Box>
