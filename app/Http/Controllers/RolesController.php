@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RoleRequest;
+use App\Http\Resources\RoleResource;
 use App\Models\Role;
 use Illuminate\Http\Request;
 
@@ -12,7 +14,10 @@ class RolesController extends Controller
      */
     public function index()
     {
-        return inertia("system/Role");
+        $roles = Role::query()->latest()->get();
+        return inertia("Resources/RoleResource/RoleList",[
+            "roles" => RoleResource::collection($roles),
+        ]);
     }
 
     /**
@@ -20,15 +25,18 @@ class RolesController extends Controller
      */
     public function create()
     {
-        //
+        return inertia("Resources/RoleResource/RoleCreate");
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(RoleRequest $request)
     {
-        //
+        $role = new Role();
+        $role->fill($request->validated());
+        $role->save();
+        return to_route("role.index")->with("success", "New Role has been created successfully");
     }
 
     /**

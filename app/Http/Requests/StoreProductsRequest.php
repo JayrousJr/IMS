@@ -22,11 +22,8 @@ class StoreProductsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name"=>"required|string|min:3|max:255",
-            "category_id"=>"required|numeric",
-            "price"=>"required|numeric",
-            "description"=>"required|string|min:3|max:1500",
-            "expiry_date"=>"required|string"
+            'stock_id' => 'required|exists:stocks,id',
+            'available_quantity' => 'required|numeric|min:1|max:' . auth()->user()->stockQuantity($this->input('stock_id')),
         ];
     }
 }

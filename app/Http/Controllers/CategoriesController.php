@@ -37,9 +37,11 @@ class CategoriesController extends Controller
     public function store(StoreCategoryRequest $request)
     {
         $data = $request->validated();
-        $data = Category::create($data);
-        return to_route("category.index")->with("success", "Category has been created successifully");
         // dd($data);
+        $data = Category::create($data);
+        // dd($data);
+        return to_route("category.index")->with("success", "Category has been created successifully");
+
     }
 
     /**
@@ -71,7 +73,7 @@ class CategoriesController extends Controller
     {
         $category = Category::findOrFail($id);
         $category->update($request->validated());
-         return to_route("category.index")->with("success", "Category has been updated successifully");
+        return to_route("category.index")->with("success", "Category has been updated successifully");
     }
 
     /**
@@ -79,7 +81,7 @@ class CategoriesController extends Controller
      */
     public function destroy($id)
     {
-        $category= Category::findOrFail($id);
+        $category = Category::findOrFail($id);
         $category->delete();
         return to_route("category.index")->with("success", "Category has been deleted successifully");
     }

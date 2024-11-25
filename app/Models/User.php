@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Trait\FilterByShopId;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -18,13 +20,20 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    // protected $connection = "tenant";
+   
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        "phone",
         "shop_id",
-        "role"
+        "name",
+        "email",
+        "suspended",
+        "role_id",
+        "role",
+        "contact",
+        'password',
+        "address",
+        "shop_name",
+        "domain"
     ];
 
     /**
@@ -53,4 +62,17 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Tenant::class);
     }
+    public function userToShop() {
+        return $this->belongsTo(Shop::class,"shop_id","id");
+    }
+    public function myRole()
+    {
+        return $this->belongsTo(Role::class, "role_id", "id");
+    }
+    public function stockQuantity($stockId)
+    {
+        $stock = Stock::find($stockId);
+        return $stock->available_quantity;
+    }
+    
 }

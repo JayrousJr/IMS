@@ -1,9 +1,12 @@
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import * as IoIoIcon from "react-icons/io";
 import { useEffect, useState } from "react";
 import { sideNav } from "@/constants";
 import DynamicIcons from "./DynamicIcons";
 const Navigation = () => {
+    const page = usePage();
+    const userdata = page.props.auth?.globaluserdata.data;
+
     const [navOpen, setNavOpen] = useState(() => {
         const storedNavState = localStorage.getItem("navOpenState");
         return storedNavState || true;
@@ -49,12 +52,12 @@ const Navigation = () => {
                         !navOpen && "hidden"
                     }`}
                 >
-                    {shopName}
+                    {userdata.shop.name}
                 </span>
             </div>
             <div className="overflow-y-auto overflow-x-hidden">
-                <nav className="max-w-[250px] mt-6">
-                    <ul className="flex flex-col gap-y-1">
+                <nav className="max-w-[250px] my-2">
+                    <ul className="flex flex-col gap-y-0">
                         {sideNav.map((item, index) => {
                             return (
                                 <li

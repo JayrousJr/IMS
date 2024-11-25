@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title inertia>{{ config('app.name', 'Laravel') }}</title>
+    <title inertia>{{ config('app.name', 'IMS') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -29,7 +29,7 @@ $tenant = tenant("shop_name");
     @inertia
 </body>
 <script>
-window.shopName = @json($tenant);
+    window.shopName = @json($tenant);
 </script>
 
 </html>

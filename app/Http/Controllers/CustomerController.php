@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCustomerRequest;
+use App\Http\Requests\UpdateCustomerRequest;
+use App\Http\Resources\CustomerResource;
 use App\Models\Customer;
 use Illuminate\Http\Request;
+
+use function App\Helpers\shop;
 
 class CustomerController extends Controller
 {
@@ -12,7 +17,10 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        return inertia("system/Customers");
+        $customer = Customer::query()->latest()->get();
+        return inertia("Resources/CustomerResource/CustomersList",[
+            "customer" => CustomerResource::collection($customer),
+        ]);
     }
 
     /**
@@ -20,23 +28,32 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        //
+        return inertia("Resources/CustomerResource/CustomerCreate");
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCustomerRequest $request)
     {
-        //
+
+        $customer = new Customer();
+        $customer->fill($request->validated());
+        $customer->shop_id = shop();
+        $customer->save();
+        return to_route("customer.index")->with("success", "New Customer has been added successfully");
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Customer $customer)
+    public function show($id)
     {
-        //
+        $customer = Customer::query()->find($id);
+        // dd($customer);
+        return inertia("Resources/CustomerResource/CustomerView",[
+            "customer" => new CustomerResource($customer),
+        ]);
     }
 
     /**
@@ -50,9 +67,12 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Customer $customer)
+    public function update(UpdateCustomerRequest $request, $id)
     {
-        //
+        $customer = Customer::findOrFail($id);
+        $customer->update($request->validated());
+        $customer->save();
+        return to_route("customer.index")->with("success", "Customer Details has been updated successfully");
     }
 
     /**

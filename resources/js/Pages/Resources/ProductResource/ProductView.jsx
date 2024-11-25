@@ -1,162 +1,163 @@
-import Button from "@/Components/Button";
-import CancelButton from "@/Components/CancelButton";
-import InputError from "@/Components/InputError";
-import InputLabel from "@/Components/InputLabel";
-import PageDescription from "@/Components/PageDescription";
-import SelectInput from "@/Components/SelectInput";
-import TextArea from "@/Components/TextArea";
-import TextInput from "@/Components/TextInput";
+import Description from "@/Components/Description";
+import SubmitButton from "@/Components/SubmitButton";
 import Layouts from "@/Layouts/Layouts";
+import formatMoney from "@/utils/formats";
 import { Head, useForm } from "@inertiajs/react";
-import { useState } from "react";
+import { Box, TextField, useMediaQuery } from "@mui/material";
+import { useEffect, useState } from "react";
 
-const ProductCreate = ({ categories, product }) => {
-    // console.log(categories);
-    const [categoriesData, setCategoriesData] = useState(categories.data);
+const ProductCreate = ({ product, stocks }) => {
     const [products, setProducts] = useState(product.data);
-
+    const [stockQuantity, setStockQuantity] = useState(null);
+    const [quantityError, setQuantityError] = useState(null);
     const { data, setData, put, processing, errors } = useForm({
-        name: products.name,
-        description: products.description,
-        category_id: products.categoryID.id,
-        price: products.price,
-        description: products.description,
-        expiry_date: products.expiryDate,
+        available_quantity: product.data.available_quantity,
+        stock_id: product.data.stock.id,
     });
+
+    const selectedStock = stocks.data.find(
+        (stock) => stock.id == data.stock_id,
+    );
+
+    useEffect(() => {
+        if (selectedStock) {
+            setStockQuantity(selectedStock.available_quantity);
+        } else {
+            setStockQuantity(null);
+        }
+    }, [data.stock_id, stocks]);
+
+    useEffect(() => {
+        if (parseInt(data.available_quantity) > parseInt(stockQuantity)) {
+            setQuantityError(
+                `The Quantity you are trying to enter is greater than ${stockQuantity}`,
+            );
+        } else if (data.available_quantity <= 0) {
+            setQuantityError(
+                `The Quantity you are trying to enter is less than the required amount, atleast record 1 product`,
+            );
+        } else {
+            setQuantityError(null);
+        }
+    }, [data.available_quantity, stockQuantity]);
+
+    const handleQuantityBlur = () => {
+        if (data.available_quantity > stockQuantity) {
+            setQuantityError(
+                `The Quantity you are trying to enter is greater than ${stockQuantity}`,
+            );
+        } else if (data.available_quantity < 1) {
+            setQuantityError(
+                `The Quantity you are trying to enter is less than the required amount, atleast record 1 product`,
+            );
+        } else {
+            setQuantityError(null);
+        }
+    };
     const submit = (e) => {
         e.preventDefault();
-        put(route("product.edit", products?.id), data);
+        put(route("product.edit", products.id), data);
     };
+
+    const isNonMobile = useMediaQuery("(min-width:600px)");
+
+    function helperText() {
+        if (quantityError) return quantityError;
+        if (errors.available_quantity) return errors.available_quantity;
+        return "";
+    }
+    const refProduct = [
+        {
+            title: "Product ",
+            value: products.stock.name,
+        },
+        {
+            title: "Category",
+            value: products.stock.category.name,
+        },
+        {
+            title: "Selling Price",
+            value: formatMoney(products.stock.selling_price),
+        },
+        {
+            title: " Quantity",
+            value: products.available_quantity,
+        },
+        {
+            title: "Expire Date",
+            value: products.stock.expiry_date,
+        },
+        {
+            title: "Manufacturer",
+            value: products.stock.manufacturer_name,
+        },
+        {
+            title: "Supplier ",
+            value: products.stock.supplier.name,
+        },
+
+        {
+            title: "Shop ",
+            value: products.stock.shop.shop_name,
+        },
+    ];
+
     return (
-        <Layouts name="Product View">
-            <Head title="Products" />
-            <div className="gap-2 px-8 rounded-xl py-8">
-                <PageDescription
-                    title="Product"
-                    page="View"
-                    routeTo="product.index"
-                />
-                <div className="form-container mt-6 bg-dark-200">
-                    <form onSubmit={submit}>
-                        <h2 className="text-center heading text-write">
-                            Create New Product
-                        </h2>
-                        <div className="flex flex-col gap-6">
-                            <div>
-                                <InputLabel htmlFor="name" value="Name" />
-                                <TextInput
-                                    type="text"
-                                    name="name"
-                                    defaultValue={data.name}
-                                    autoComplete="name"
-                                    isFocused={true}
-                                    errors={errors.name}
-                                    onChange={(e) =>
-                                        setData("name", e.target.value)
-                                    }
-                                />
-                                <InputError
-                                    message={errors.name}
-                                    className="mt-2"
-                                />
-                            </div>
-                            <div>
-                                <InputLabel
-                                    htmlFor="category"
-                                    value="Category"
-                                />
-                                <SelectInput
-                                    type="text"
-                                    name="category_id"
-                                    defaultValue={data.category_id}
-                                    autoComplete="category_id"
-                                    isFocused={true}
-                                    errors={errors.category_id}
-                                    onChange={(e) =>
-                                        setData("category_id", e.target.value)
-                                    }
-                                    categories={categories}
-                                />
-
-                                <InputError
-                                    message={errors.category_id}
-                                    className="mt-2"
-                                />
-                            </div>
-                            <div>
-                                <InputLabel htmlFor="price" value="Price" />
-                                <TextInput
-                                    type="numeric"
-                                    name="price"
-                                    defaultValue={data.price}
-                                    autoComplete="price"
-                                    isFocused={true}
-                                    errors={errors.price}
-                                    onChange={(e) =>
-                                        setData("price", e.target.value)
-                                    }
-                                />
-
-                                <InputError
-                                    message={errors.price}
-                                    className="mt-2"
-                                />
-                            </div>
-                            <div>
-                                <InputLabel
-                                    htmlFor="expiry_date"
-                                    value="Expire Date"
-                                />
-                                <TextInput
-                                    type="date"
-                                    name="expiry_date"
-                                    defaultValue={data.expiry_date}
-                                    autoComplete="expiry_date"
-                                    isFocused={true}
-                                    errors={errors.expiry_date}
-                                    onChange={(e) =>
-                                        setData("expiry_date", e.target.value)
-                                    }
-                                />
-
-                                <InputError
-                                    message={errors.expiry_date}
-                                    className="mt-2"
-                                />
-                            </div>
-                            <div>
-                                <InputLabel
-                                    htmlFor="description"
-                                    value="Description"
-                                />
-                                <TextArea
-                                    type="text"
-                                    name="description"
-                                    rows="7"
-                                    defaultValue={data.description}
-                                    autoComplete="description"
-                                    isFocused={true}
-                                    errors={errors.description}
-                                    onChange={(e) =>
-                                        setData("description", e.target.value)
-                                    }
-                                />
-
-                                <InputError
-                                    message={errors.description}
-                                    className="mt-2"
-                                />
-                            </div>
+        <Layouts>
+            <Head title="Product View" />
+            <Description title="Product View" link={null} />
+            <Box m="10px 0 0 0">
+                <section className="section grid grid-cols-4 max-md:grid-cols-2 max-ss:grid-cols-1 my-4 gap-4">
+                    {refProduct.map((item) => (
+                        <div
+                            className="flex flex-col gap-2 bg-grey-gradient-2 px-4 py-2 rounded-xl"
+                            key={item.title}
+                        >
+                            <h1 className="text-[18px]">{item.title}</h1>
+                            <p className="text-primary text-bold">
+                                {item.value}
+                            </p>
                         </div>
-                        <div className="mt-4 flex justify-between">
-                            <Button disabled={processing}>
-                                Create Product
-                            </Button>
-                            <CancelButton toRoute="product.index" />
-                        </div>
-                    </form>
-                </div>
-            </div>
+                    ))}
+                </section>
+            </Box>
+            <Box m="10px 0 0 0">
+                <form onSubmit={submit}>
+                    <h2 className="text-[20px] font-semibold  text-center py-4">
+                        You can update the following data on this product
+                    </h2>
+                    <Box
+                        display="grid"
+                        gap="30px"
+                        gridTemplateColumns="repeat(4, minmax(0,1fr))"
+                        sx={{
+                            "& > div": {
+                                gridColumn: isNonMobile ? undefined : "span 4",
+                            },
+                        }}
+                    >
+                        <TextField
+                            fullWidth
+                            variant="filled"
+                            type="number"
+                            name="available_quantity"
+                            label="Product Quantity"
+                            value={data.available_quantity}
+                            helperText={helperText()}
+                            onChange={(e) =>
+                                setData("available_quantity", e.target.value)
+                            }
+                            error={helperText()}
+                            sx={{ gridColumn: "span 4" }}
+                        />
+                    </Box>
+                    <SubmitButton
+                        title="Update"
+                        processing={processing}
+                        disabled={quantityError}
+                    />
+                </form>
+            </Box>
         </Layouts>
     );
 };

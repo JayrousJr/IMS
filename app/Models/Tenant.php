@@ -19,8 +19,8 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         "user_id"
     ];
 
-    public function users()
-    {
-        return $this->belongsTo(User::class);
-    }
+    // public function users()
+    // {
+    //     return $this->belongsTo(User::class);
+    // }
 }

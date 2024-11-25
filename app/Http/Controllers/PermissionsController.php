@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PermissionResource;
 use App\Models\Permission;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,10 @@ class PermissionsController extends Controller
      */
     public function index()
     {
-        return inertia("system/Permisiions");
+        $permissions = Permission::query()->latest()->get();
+        return inertia("Resources/PermissionResource/PermissionList",[
+            "permissions" => PermissionResource::collection($permissions),
+        ]);
     }
 
     /**
@@ -20,7 +24,9 @@ class PermissionsController extends Controller
      */
     public function create()
     {
-        //
+        return inertia("Resources/PermissionResource/PermissionCreate");
+
+
     }
 
     /**
@@ -36,7 +42,8 @@ class PermissionsController extends Controller
      */
     public function show(Permission $permission)
     {
-        //
+        return inertia("Resources/PermissionResource/PermissionView");
+
     }
 
     /**

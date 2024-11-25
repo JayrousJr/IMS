@@ -24,7 +24,7 @@ export default {
         },
         extend: {
             fontFamily: {
-                sans: ["Figtree", ...defaultTheme.fontFamily.sans],
+                poppins: ["Poppins", "sans-serif"],
             },
             colors: {
                 "dark-100": "#121212",
@@ -35,6 +35,14 @@ export default {
                 "text-gray": "rgb(209 213 219)",
                 tertiary: "#373737",
             },
+        },
+        screens: {
+            xs: "480px",
+            ss: "620px",
+            sm: "768px",
+            md: "1060px",
+            lg: "1200px",
+            xl: "1700px",
         },
     },
 

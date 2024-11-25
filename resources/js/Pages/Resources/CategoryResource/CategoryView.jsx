@@ -1,93 +1,69 @@
-import Button from "@/Components/Button";
-import CancelButton from "@/Components/CancelButton";
-import InputError from "@/Components/InputError";
-import InputLabel from "@/Components/InputLabel";
-import PageDescription from "@/Components/PageDescription";
-import TextArea from "@/Components/TextArea";
-import TextInput from "@/Components/TextInput";
+import Description from "@/Components/Description";
+import SubmitButton from "@/Components/SubmitButton";
 import Layouts from "@/Layouts/Layouts";
 import { Head, useForm } from "@inertiajs/react";
-import React from "react";
+import { Box, TextField, useMediaQuery } from "@mui/material";
 
 const CategoryView = ({ category }) => {
     const { data, put, processing, errors, setData } = useForm({
-        name: category.data.name,
-        description: category.data.description,
+        name: category?.data.name,
+        description: category?.data.description,
     });
-    function submit(e) {
+    function handleSubmit(e) {
         e.preventDefault();
         put(route("category.update", category.data.id), data);
     }
-
+    const isNonMobile = useMediaQuery("(min-width:600px)");
     return (
         <Layouts name="Categories">
             <Head title="Categories" />
-            <div className="gap-2 px-8 rounded-xl py-8">
-                <PageDescription
-                    title="Category View"
-                    page="Edit"
-                    routeTo="category.index"
-                />
-                <div className="form-container mt-6 bg-dark-200">
-                    <form onSubmit={submit}>
-                        <h2 className="text-center heading text-write">
-                            Create New Category
-                        </h2>
-                        <div className="flex flex-col gap-6">
-                            <div>
-                                <InputLabel htmlFor="name" value="Name" />
-                                <TextInput
-                                    id="name"
-                                    type="text"
-                                    name="name"
-                                    defaultValue={data.name}
-                                    autoComplete="name"
-                                    isFocused={true}
-                                    errors={errors.name}
-                                    onChange={(e) =>
-                                        setData("name", e.target.value)
-                                    }
-                                />
-
-                                <InputError
-                                    message={errors.name}
-                                    className="mt-2"
-                                />
-                            </div>
-                            <div>
-                                <InputLabel
-                                    htmlFor="description"
-                                    value="Description"
-                                />
-                                <TextArea
-                                    id="description"
-                                    type="text"
-                                    name="description"
-                                    rows="7"
-                                    defaultValue={data.description}
-                                    autoComplete="description"
-                                    isFocused={true}
-                                    errors={errors.description}
-                                    onChange={(e) =>
-                                        setData("description", e.target.value)
-                                    }
-                                />
-
-                                <InputError
-                                    message={errors.description}
-                                    className="mt-2"
-                                />
-                            </div>
-                        </div>
-                        <div className="mt-4 flex justify-between">
-                            <Button disabled={processing}>
-                                Update Category
-                            </Button>
-                            <CancelButton toRoute="category.index" />
-                        </div>
-                    </form>
-                </div>
-            </div>
+            <Description title="Create Category" link={null} />
+            <Box m="10px 0 0 0">
+                <form onSubmit={handleSubmit}>
+                    <Box
+                        display="grid"
+                        gap="30px"
+                        gridTemplateColumns="repeat(4, minmax(0,1fr))"
+                        sx={{
+                            "& > div": {
+                                gridColumn: isNonMobile ? undefined : "span 4",
+                            },
+                        }}
+                    >
+                        <TextField
+                            fullWidth
+                            variant="filled"
+                            type="text"
+                            name="name"
+                            label="Category Name"
+                            defaultValue={data.name}
+                            helperText={errors.name ? errors.name : ""}
+                            onChange={(e) => setData("name", e.target.value)}
+                            error={errors.name ? true : false}
+                            sx={{ gridColumn: "span 4" }}
+                        />
+                        <TextField
+                            fullWidth
+                            multiline
+                            rows={7}
+                            variant="filled"
+                            type="text"
+                            name="description"
+                            label="Category Description"
+                            defaultValue={data.description}
+                            helperText={
+                                errors.description ? errors.description : ""
+                            }
+                            onChange={(e) =>
+                                setData("description", e.target.value)
+                            }
+                            error={errors.description ? true : false}
+                            sx={{ gridColumn: "span 4" }}
+                        />
+                    </Box>
+                    <SubmitButton title="Create" />
+                </form>
+            </Box>
         </Layouts>
     );
 };

@@ -1,10 +1,8 @@
 import Checkbox from "@/Components/Checkbox";
-import GuestLayout from "@/Layouts/GuestLayout";
-import InputError from "@/Components/InputError";
-import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
-import TextInput from "@/Components/TextInput";
+import GuestLayout from "@/Layouts/GuestLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
+import { Box, TextField, useMediaQuery } from "@mui/material";
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -20,52 +18,55 @@ export default function Login({ status, canResetPassword }) {
             onFinish: () => reset("password"),
         });
     };
-
+    const isNonMobile = useMediaQuery("(min-width:600px)");
     return (
         <GuestLayout>
             <Head title="Log in" />
 
             {status && (
-                <div className="mb-4 font-medium text-sm text-green-600">
+                <div className="mb-4 text-sm font-medium text-green-600">
                     {status}
                 </div>
             )}
 
             <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="email" value="Email" />
-
-                    <TextInput
-                        id="email"
-                        type="email"
+                <Box
+                    display="grid"
+                    gap="30px"
+                    gridTemplateColumns="repeat(4, minmax(0,1fr))"
+                    sx={{
+                        "& > div": {
+                            gridColumn: isNonMobile ? undefined : "span 4",
+                        },
+                    }}
+                >
+                    <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
                         name="email"
-                        // value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        isFocused={true}
+                        label="E-mail"
+                        value={data.email}
+                        helperText={errors.email ? errors.email : ""}
                         onChange={(e) => setData("email", e.target.value)}
+                        error={errors.email ? true : false}
+                        sx={{ gridColumn: "span 4", background: "#fff" }}
                     />
 
-                    <InputError message={errors.email} className="mt-2" />
-                </div>
-
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
-
-                    <TextInput
-                        id="password"
+                    <TextField
+                        fullWidth
+                        variant="filled"
                         type="password"
                         name="password"
-                        // value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
-                        // onChange={(e) => setData("password", e.target.value)}
+                        label="Password"
+                        value={data.password}
+                        helperText={errors.password ? errors.password : ""}
+                        onChange={(e) => setData("password", e.target.value)}
+                        error={errors.password ? true : false}
+                        sx={{ gridColumn: "span 4", background: "#fff" }}
                     />
-
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
-
-                <div className="block mt-4">
+                </Box>
+                <div className="mt-4 block">
                     <label className="flex items-center">
                         <Checkbox
                             name="remember"
@@ -80,11 +81,11 @@ export default function Login({ status, canResetPassword }) {
                     </label>
                 </div>
 
-                <div className="flex items-center justify-end mt-4">
+                <div className="mt-4 flex items-center justify-end">
                     {canResetPassword && (
                         <Link
                             href={route("password.request")}
-                            className="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
                         >
                             Forgot your password?
                         </Link>

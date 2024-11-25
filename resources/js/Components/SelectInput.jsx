@@ -6,14 +6,14 @@ export default forwardRef(function SelectInput(
         className = "",
         isFocused = false,
         placeholder,
-        categories,
+        passedData,
         errors,
         ...props
     },
     ref
 ) {
     const input = ref ? ref : useRef();
-    const [cat, setCat] = useState(categories);
+    const [cat, setCat] = useState(passedData);
 
     useEffect(() => {
         if (isFocused) {
@@ -31,7 +31,7 @@ export default forwardRef(function SelectInput(
             placeholder=""
             ref={input}
         >
-            <option value="default">Choose Category</option>
+            <option value="default">Select Value</option>
             {cat.data.map((item, index) => (
                 <option key={index} value={item.id}>
                     {item.name}

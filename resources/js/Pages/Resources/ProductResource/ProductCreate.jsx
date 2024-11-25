@@ -1,167 +1,133 @@
-import Button from "@/Components/Button";
-import CancelButton from "@/Components/CancelButton";
-import InputError from "@/Components/InputError";
-import InputLabel from "@/Components/InputLabel";
-import PageDescription from "@/Components/PageDescription";
-import SelectInput from "@/Components/SelectInput";
-import TextArea from "@/Components/TextArea";
-import TextInput from "@/Components/TextInput";
+import Description from "@/Components/Description";
+import SubmitButton from "@/Components/SubmitButton";
 import Layouts from "@/Layouts/Layouts";
 import { Head, useForm } from "@inertiajs/react";
-import { useState } from "react";
+import { Box, MenuItem, TextField, useMediaQuery } from "@mui/material";
+import { useEffect, useState } from "react";
 
-const ProductCreate = ({ categories }) => {
-    // console.log(categories);
-    const [categoriesData, setCategoriesData] = useState(categories.data);
-    // console.log(categoriesData);
-
-    const { data, setData, post, processing, errors, reset } = useForm({
-        name: "",
-        description: "",
-        category_id: "",
-        price: "",
-        description: "",
-        expiry_date: "",
+const ProductCreate = ({ stocks }) => {
+    const [stockQuantity, setStockQuantity] = useState(null);
+    const [quantityError, setQuantityError] = useState(null);
+    const { data, setData, post, processing, errors } = useForm({
+        stock_id: "",
+        available_quantity: "",
     });
+
+    const selectedStock = stocks.data.find(
+        (stock) => stock.id == data.stock_id,
+    );
+
+    useEffect(() => {
+        if (selectedStock) {
+            setStockQuantity(selectedStock.available_quantity);
+        } else {
+            setStockQuantity(null);
+        }
+    }, [data.stock_id, stocks]);
+
+    useEffect(() => {
+        if (parseInt(data.available_quantity) > parseInt(stockQuantity)) {
+            setQuantityError(
+                `The Quantity you are trying to enter is greater than ${stockQuantity}`,
+            );
+        } else if (data.available_quantity <= 0) {
+            setQuantityError(
+                `The Quantity you are trying to enter is less than the required amount, atleast record 1 product`,
+            );
+        } else {
+            setQuantityError(null);
+        }
+    }, [data.available_quantity, stockQuantity]);
+
+    const handleQuantityBlur = () => {
+        if (data.available_quantity > stockQuantity) {
+            setQuantityError(
+                `The Quantity you are trying to enter is greater than ${stockQuantity}`,
+            );
+        } else if (data.available_quantity < 1) {
+            setQuantityError(
+                `The Quantity you are trying to enter is less than the required amount, atleast record 1 product`,
+            );
+        } else {
+            setQuantityError(null);
+        }
+    };
     const submit = (e) => {
         e.preventDefault();
-        post(route("product.store", data), {
-            // onError: () => setIsOpen(true),
-            onSuccess: () => {
-                reset("name", "description");
-            },
-        });
+        post(route("product.store", data));
     };
+
+    const isNonMobile = useMediaQuery("(min-width:600px)");
+
+    function helperText() {
+        if (quantityError) return quantityError;
+        if (errors.available_quantity) return errors.available_quantity;
+        return "";
+    }
+
     return (
-        <Layouts name="Product Create">
-            <Head title="Products" />
-            <div className="gap-2 px-8 rounded-xl py-8">
-                <PageDescription
-                    title="Product"
-                    page="List"
-                    routeTo="product.index"
-                />
-                <div className="form-container mt-6 bg-dark-200">
-                    <form onSubmit={submit}>
-                        <h2 className="text-center heading text-write">
-                            Create New Product
-                        </h2>
-                        <div className="flex flex-col gap-6">
-                            <div>
-                                <InputLabel htmlFor="name" value="Name" />
-                                <TextInput
-                                    type="text"
-                                    name="name"
-                                    value={data.name}
-                                    autoComplete="name"
-                                    isFocused={true}
-                                    errors={errors.name}
-                                    onChange={(e) =>
-                                        setData("name", e.target.value)
-                                    }
-                                />
-                                <InputError
-                                    message={errors.name}
-                                    className="mt-2"
-                                />
-                            </div>
-                            <div>
-                                <InputLabel
-                                    htmlFor="category"
-                                    value="Category"
-                                />
-                                <SelectInput
-                                    type="text"
-                                    name="category_id"
-                                    value={data.category_id}
-                                    autoComplete="category_id"
-                                    isFocused={true}
-                                    errors={errors.category_id}
-                                    onChange={(e) =>
-                                        setData("category_id", e.target.value)
-                                    }
-                                    categories={categories}
-                                />
-
-                                <InputError
-                                    message={errors.category_id}
-                                    className="mt-2"
-                                />
-                            </div>
-                            <div>
-                                <InputLabel htmlFor="price" value="Price" />
-                                <TextInput
-                                    type="numeric"
-                                    name="price"
-                                    value={data.price}
-                                    autoComplete="price"
-                                    isFocused={true}
-                                    errors={errors.price}
-                                    onChange={(e) =>
-                                        setData("price", e.target.value)
-                                    }
-                                />
-
-                                <InputError
-                                    message={errors.price}
-                                    className="mt-2"
-                                />
-                            </div>
-                            <div>
-                                <InputLabel
-                                    htmlFor="expiry_date"
-                                    value="Expire Date"
-                                />
-                                <TextInput
-                                    type="date"
-                                    name="expiry_date"
-                                    value={data.expiry_date}
-                                    autoComplete="expiry_date"
-                                    isFocused={true}
-                                    errors={errors.expiry_date}
-                                    onChange={(e) =>
-                                        setData("expiry_date", e.target.value)
-                                    }
-                                />
-
-                                <InputError
-                                    message={errors.expiry_date}
-                                    className="mt-2"
-                                />
-                            </div>
-                            <div>
-                                <InputLabel
-                                    htmlFor="description"
-                                    value="Description"
-                                />
-                                <TextArea
-                                    type="text"
-                                    name="description"
-                                    rows="7"
-                                    value={data.description}
-                                    autoComplete="description"
-                                    isFocused={true}
-                                    errors={errors.description}
-                                    onChange={(e) =>
-                                        setData("description", e.target.value)
-                                    }
-                                />
-
-                                <InputError
-                                    message={errors.description}
-                                    className="mt-2"
-                                />
-                            </div>
-                        </div>
-                        <div className="mt-4 flex justify-between">
-                            <Button disabled={processing}>
-                                Create Product
-                            </Button>
-                            <CancelButton toRoute="product.index" />
-                        </div>
-                    </form>
-                </div>
-            </div>
+        <Layouts>
+            <Head title="Stock Create" />
+            <Description title="Stock Create" link={null} />
+            <Box m="10px 0 0 0">
+                <form onSubmit={submit}>
+                    <Box
+                        display="grid"
+                        gap="30px"
+                        gridTemplateColumns="repeat(4, minmax(0,1fr))"
+                        sx={{
+                            "& > div": {
+                                gridColumn: isNonMobile ? undefined : "span 4",
+                            },
+                        }}
+                    >
+                        <TextField
+                            fullWidth
+                            variant="filled"
+                            type="text"
+                            name="stock_id"
+                            label="Supplier Name"
+                            select
+                            value={data.stock_id}
+                            helperText={
+                                errors.stock_id
+                                    ? errors.stock_id
+                                    : "Select the product from the stock and transfer it to shop"
+                            }
+                            onChange={(e) =>
+                                setData("stock_id", e.target.value)
+                            }
+                            error={errors.stock_id ? true : false}
+                            sx={{ gridColumn: "span 4" }}
+                        >
+                            {stocks.data.map((item) => (
+                                <MenuItem key={item.name} value={item.id}>
+                                    {item.name}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                        <TextField
+                            fullWidth
+                            variant="filled"
+                            type="number"
+                            name="available_quantity"
+                            label="Product Quantity"
+                            value={data.available_quantity}
+                            helperText={helperText()}
+                            onChange={(e) =>
+                                setData("available_quantity", e.target.value)
+                            }
+                            error={helperText()}
+                            sx={{ gridColumn: "span 4" }}
+                        />
+                    </Box>
+                    <SubmitButton
+                        title="Create"
+                        processing={processing}
+                        disabled={quantityError}
+                    />
+                </form>
+            </Box>
         </Layouts>
     );
 };

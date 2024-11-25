@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 class RoutingController extends Controller
 {
     // function home()

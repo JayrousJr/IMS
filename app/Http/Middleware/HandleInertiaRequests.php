@@ -2,7 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -33,7 +35,16 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
+                'globaluserdata' => Auth::user() ? new UserResource($request->user()) : null,
             ],
+            "flash" => [
+                'success' => fn() => $request->session()->get("success"),
+                'error' => fn() => $request->session()->get("error"),
+                "logs" => fn() => $request->session()->get("logs"),
+                "domain" => fn() => $request->session()->get("domain"),
+                "not_found" => fn() => $request->session()->get("not_found"),
+            ]
         ];
+
     }
 }

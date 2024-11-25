@@ -12,6 +12,7 @@ return new class extends Migration {
     {
         Schema::create('financial_statements', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('shop_id')->constrained();
             $table->string("type");
             $table->date("period_start");
             $table->date("period_end");
