@@ -10,15 +10,14 @@ import NoDataFound from "@/Components/NoDataFound";
 import formatMoney from "@/utils/formats";
 
 const Sales = ({ sales }) => {
-    
-    let editedSales = sales.data.map((item) => {
+    let editedSales = sales?.data?.map((item) => {
         return {
             id: item.id,
             receipt: item.receipt,
             amount: formatMoney(item.amount),
             paid: formatMoney(item.discounted),
             discount: item.discount,
-            customer: item.customer.name,
+            customer: item.customer?.name,
             shop: item.shops.shop_name,
         };
     });

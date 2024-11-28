@@ -13,7 +13,7 @@ trait FilterByShopId
                 $model->shop_id = auth()->user()->shop_id;
         });
         self::addGlobalScope(function(Builder $builder){
-            $builder->where("shop_id",auth()->user()->shop_id);
+            $builder->where("shop_id", auth()->user()->shop_id);
         });
     }
 } 

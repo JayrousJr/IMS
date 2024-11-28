@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RoleRequest;
+use App\Http\Resources\PermissionResource;
 use App\Http\Resources\RoleResource;
+use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Http\Request;
 
@@ -25,7 +27,10 @@ class RolesController extends Controller
      */
     public function create()
     {
-        return inertia("Resources/RoleResource/RoleCreate");
+        $permision = Permission::query()->latest()->get();
+        return inertia("Resources/RoleResource/RoleCreate",[
+            "permisions" => PermissionResource::collection($permision),
+        ]);
     }
 
     /**

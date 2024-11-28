@@ -17,7 +17,7 @@ const StockView = ({ stock, categories, suplliers }) => {
         selling_price: stocks?.buying_price,
         description: stocks?.description,
         expiry_date: stocks?.expiry_date,
-        initial_quantity: stocks?.initial_quantity,
+        available_quantity: stocks?.available_quantity,
         reorder_level: stocks?.reorder_level,
         batch_no: stocks?.batch_no,
         manufacturer_name: stocks?.manufacturer_name,
@@ -146,16 +146,16 @@ const StockView = ({ stock, categories, suplliers }) => {
                             type="number"
                             name="number"
                             label="Product Quantity"
-                            value={data.initial_quantity}
+                            value={data.available_quantity}
                             helperText={
-                                errors.initial_quantity
-                                    ? errors.initial_quantity
+                                errors.available_quantity
+                                    ? errors.available_quantity
                                     : ""
                             }
                             onChange={(e) =>
-                                setData("initial_quantity", e.target.value)
+                                setData("available_quantity", e.target.value)
                             }
-                            error={errors.initial_quantity ? true : false}
+                            error={errors.available_quantity ? true : false}
                             sx={{ gridColumn: "span 2" }}
                         />
                         <TextField

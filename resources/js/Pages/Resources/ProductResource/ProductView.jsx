@@ -3,7 +3,14 @@ import SubmitButton from "@/Components/SubmitButton";
 import Layouts from "@/Layouts/Layouts";
 import formatMoney from "@/utils/formats";
 import { Head, useForm } from "@inertiajs/react";
-import { Box, TextField, useMediaQuery } from "@mui/material";
+import {
+    Box,
+    Card,
+    CardContent,
+    TextField,
+    Typography,
+    useMediaQuery,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 
 const ProductCreate = ({ product, stocks }) => {
@@ -109,15 +116,26 @@ const ProductCreate = ({ product, stocks }) => {
             <Box m="10px 0 0 0">
                 <section className="section grid grid-cols-4 max-md:grid-cols-2 max-ss:grid-cols-1 my-4 gap-4">
                     {refProduct.map((item) => (
-                        <div
-                            className="flex flex-col gap-2 bg-grey-gradient-2 px-4 py-2 rounded-xl"
-                            key={item.title}
-                        >
-                            <h1 className="text-[18px]">{item.title}</h1>
-                            <p className="text-primary text-bold">
-                                {item.value}
-                            </p>
-                        </div>
+                        <Card sx={{ minWidth: 230 }} variant="outlined">
+                            <CardContent>
+                                <Typography
+                                    gutterBottom
+                                    sx={{
+                                        color: "text.secondary",
+                                        fontSize: 14,
+                                    }}
+                                >
+                                    {item.title}
+                                </Typography>
+                                <Typography
+                                    variant="h6"
+                                    component="p"
+                                    className="text-primary"
+                                >
+                                    {item.value}
+                                </Typography>
+                            </CardContent>
+                        </Card>
                     ))}
                 </section>
             </Box>

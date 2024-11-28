@@ -1,30 +1,41 @@
-import DestroyLink from "@/Components/DestroyLink";
-import NoDataFound from "@/Components/NoDataFound";
-import PageDescription from "@/Components/PageDescription";
-import Pagination from "@/Components/Pagination";
-import TableComponent from "@/Components/TableComponent";
-import ViewLink from "@/Components/ViewLink";
+import Description from "@/Components/Description";
+import TableGridComponent from "@/Components/TableGridComponent";
 import Layouts from "@/Layouts/Layouts";
-import { Head, Link } from "@inertiajs/react";
-import React from "react";
+import { Head } from "@inertiajs/react";
+import ButtonComponent from "@/Components/ButtonComponent";
+import NoDataFound from "@/Components/NoDataFound";
+import { useState } from "react";
 
 const RoleList = ({ roles }) => {
+    const [role, setRole] = useState(roles.data);
+    const columns = [
+        {
+            field: "name",
+            headerName: "Name",
+            flex: 1,
+            cellClassName: "name-column--cell",
+        },
+        {
+            field: "view",
+            headerName: "View",
+            flex: 1,
+            width: 50,
+            minWidth: 50,
+            maxWidth: 70,
+            renderCell: ({ row: { id } }) => (
+                <ButtonComponent data={id} mode="view" routeTo="role.show" />
+            ),
+        },
+    ];
     return (
-        <Layouts name={"Role"}>
-            <Head title="Role" />
-            <div className="text-write flex flex-col gap-8 px-8 py-2 mt-1 rounded-xl w-full">
-                <PageDescription
-                    title="Role"
-                    page="List"
-                    routeTo="role.index"
-                    actionLink="role.create"
-                />
-                {roles.data.length > 0 ? (
-                    <TableComponent data={roles} />
-                ) : (
-                    <NoDataFound name={"Role"} />
-                )}
-            </div>
+        <Layouts>
+            <Head title="Roles" />
+            <Description title="Roles List" link="role.create" />
+            {role.length > 0 ? (
+                <TableGridComponent rows={role} columns={columns} />
+            ) : (
+                <NoDataFound />
+            )}
         </Layouts>
     );
 };

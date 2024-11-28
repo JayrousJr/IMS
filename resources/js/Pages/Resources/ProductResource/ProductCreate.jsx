@@ -67,8 +67,8 @@ const ProductCreate = ({ stocks }) => {
 
     return (
         <Layouts>
-            <Head title="Stock Create" />
-            <Description title="Stock Create" link={null} />
+            <Head title="Product Create" />
+            <Description title="Product Create" link={null} />
             <Box m="10px 0 0 0">
                 <form onSubmit={submit}>
                     <Box
@@ -117,7 +117,11 @@ const ProductCreate = ({ stocks }) => {
                             onChange={(e) =>
                                 setData("available_quantity", e.target.value)
                             }
-                            error={helperText()}
+                            error={
+                                errors.available_quantity || quantityError
+                                    ? true
+                                    : false
+                            }
                             sx={{ gridColumn: "span 4" }}
                         />
                     </Box>

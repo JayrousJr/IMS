@@ -2,7 +2,7 @@ import React from "react";
 
 const Suspended = ({ suspended }) => {
     return (
-        <div className="">
+        <div>
             {suspended === 0 ? (
                 <span className="bg-green-700 px-5 py-1 rounded-xl">
                     Active

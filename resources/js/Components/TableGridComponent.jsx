@@ -41,25 +41,26 @@ const TableGridComponent = ({ rows, columns }) => {
                     border: "none",
                 },
                 "& .MuiDataGrid-cell": {
-                    borderBottom: "none",
+                    borderBottom: "1",
                 },
                 "& .name-column--cell": {
                     color: colors.grey[100],
                 },
                 "& .MuiDataGrid-columnHeader": {
                     backgroundColor: colors.grey[800],
-                    borderBottom: "none",
+                    borderBottom: "1",
                 },
                 "& .MuiDataGrid-virtualScroller": {
                     // backgroundColor: colors.grey[700],
                 },
                 "& .MuiDataGrid-footerContainer": {
-                    borderTop: "none",
+                    borderTop: "1",
                     backgroundColor: colors.grey[800],
                 },
                 "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
                     color: `${colors.grey[100]} !important`,
                 },
+                overflowX: "none",
             }}
         >
             <DataGrid
@@ -68,16 +69,17 @@ const TableGridComponent = ({ rows, columns }) => {
                 initialState={{
                     pagination: {
                         paginationModel: {
-                            pageSize: 10,
+                            pageSize: 5,
                         },
                     },
                 }}
-                // autoHeight
+                autoHeight
                 slots={{
                     toolbar: CustomToolbar,
                 }}
-                pageSizeOptions={[5, 10, 50]}
+                pageSizeOptions={[5, 10]}
                 checkboxSelection
+                disableRowSelectionOnClick
             />
         </Box>
     );

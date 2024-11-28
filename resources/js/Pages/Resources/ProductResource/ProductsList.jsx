@@ -9,6 +9,7 @@ import { useState } from "react";
 import NoDataFound from "@/Components/NoDataFound";
 import formatMoney from "@/utils/formats";
 import ExpireComponent from "@/Components/ExpireComponent";
+import QuantityCheck from "@/Components/QuantityCheck";
 
 const ProductsList = ({ product }) => {
     let editedProduct = product.data.map((item) => {
@@ -65,12 +66,17 @@ const ProductsList = ({ product }) => {
             headerName: "Quantity",
             flex: 1,
             cellClassName: "name-column--cell",
+            type: "number",
+            renderCell: ({ row: { av_q } }) => <QuantityCheck data={av_q} />,
+            maxWidth: 100,
         },
         {
             field: "batch_no",
             headerName: "Batch No",
             flex: 1,
+            type: "number",
             cellClassName: "name-column--cell",
+            maxWidth: 100,
         },
         {
             field: "bPrice",
@@ -87,6 +93,8 @@ const ProductsList = ({ product }) => {
         {
             field: "daysToExpire",
             headerName: "Expire in",
+            type: "number",
+            maxWidth: 100,
             flex: 1,
             cellClassName: "name-column--cell",
             renderCell: ({ row: { daysToExpire } }) => (

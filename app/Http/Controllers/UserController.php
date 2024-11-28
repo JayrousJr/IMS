@@ -64,7 +64,7 @@ class UserController extends Controller
         $shop = Shop::all();        
         $roles = Role::all();
         return inertia("Resources/UsersResource/UserView", [
-            "user" => new UserResource($user),
+            "users" => new UserResource($user),
             "shops" => ShopResource::collection($shop),     
             "roles" => RoleResource::collection($roles),
         ]);

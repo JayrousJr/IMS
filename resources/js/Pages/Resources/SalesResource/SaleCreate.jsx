@@ -152,7 +152,7 @@ const SaleCreate = ({ products, customers }) => {
             if (currentQuantity > productQuantity) {
                 updatedErrors.push({
                     index: prodIndex,
-                    error: `Exceded ${productQuantity}`,
+                    error: `Exceed ${productQuantity}`,
                 });
             } else if (currentQuantity < 1) {
                 updatedErrors.push({

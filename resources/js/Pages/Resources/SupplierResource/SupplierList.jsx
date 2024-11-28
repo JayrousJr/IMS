@@ -9,6 +9,7 @@ import ButtonComponent from "@/Components/ButtonComponent";
 import DeleteConfirmationModal from "@/Components/DeleteConfirmationModal";
 import { useState } from "react";
 import Suspended from "@/Components/Suspended";
+import NoDataFound from "@/Components/NoDataFound";
 
 const SupplierList = ({ suppliers }) => {
     const theme = useTheme();
@@ -98,7 +99,11 @@ const SupplierList = ({ suppliers }) => {
         <Layouts>
             <Head title="Suppliers" />
             <Description title="Suppliers List" link="supplier.create" />
-            <TableGridComponent rows={suppliers.data} columns={columns} />
+            {suppliers.data.length > 0 ? (
+                <TableGridComponent rows={suppliers.data} columns={columns} />
+            ) : (
+                <NoDataFound />
+            )}
             <DeleteConfirmationModal
                 id={selectedId}
                 open={openModal}

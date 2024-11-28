@@ -9,10 +9,9 @@ import { useState } from "react";
 import NoDataFound from "@/Components/NoDataFound";
 import formatMoney from "@/utils/formats";
 import ExpireComponent from "@/Components/ExpireComponent";
+import QuantityCheck from "@/Components/QuantityCheck";
 
 const StockList = ({ stocks }) => {
-    // console.log(stocks);
-
     const theme = useTheme();
     const colors = tokens(theme.palette?.mode);
     const [openModal, setOpenModal] = useState(false);
@@ -48,7 +47,6 @@ const StockList = ({ stocks }) => {
             daysToExpire: item.daysToExpire,
         };
     });
-    console.log(refStock[0].daysToExpire);
 
     const columns = [
         {
@@ -68,11 +66,18 @@ const StockList = ({ stocks }) => {
             headerName: "Quantity",
             flex: 1,
             cellClassName: "name-column--cell",
+            renderCell: ({ row: { available_quantity } }) => (
+                <QuantityCheck data={available_quantity} />
+            ),
+            type: "number",
+            maxWidth: 100,
         },
         {
             field: "batch_no",
             headerName: "Batch No",
             flex: 1,
+            type: "number",
+            maxWidth: 100,
             cellClassName: "name-column--cell",
         },
         {
@@ -91,6 +96,8 @@ const StockList = ({ stocks }) => {
             field: "daysToExpire",
             headerName: "Expire in",
             flex: 1,
+            type: "number",
+            maxWidth: 100,
             cellClassName: "name-column--cell",
             renderCell: ({ row: { daysToExpire } }) => (
                 <ExpireComponent data={daysToExpire} />

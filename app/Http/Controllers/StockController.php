@@ -86,9 +86,14 @@ class StockController extends Controller
     public function update(UpdateStockRequest $request, $id)
     {
         $stock = Stock::findOrFail($id);
+        $newQuantity = $request["available_quantity"];
+        $prevInitialQ = $stock->initial_quantity;
+        $prevAvQ = $stock->available_quantity;
+        $updatedInitialQuantity = $prevInitialQ + $prevAvQ - $newQuantity;
+        // dd("In ".$newQuantity,"Prev In" .$prevInitialQ,"Prev av: ".$prevAvQ,"Upd ".$updatedInitialQuantity);
         $stock->update($request->validated());
-        $stock->available_quantity = $stock->initial_quantity;
-        $stock->save();
+        $stock->update(['initial_quantity' => $updatedInitialQuantity]);
+        
         return to_route("stock.index")->with("success", "Stock Details has been updated successfully");
     }
 

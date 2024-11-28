@@ -6,7 +6,7 @@ import { createTheme } from "@mui/material/styles";
 import { AppProvider } from "@toolpad/core/AppProvider";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import LoadingComponent from "@/Components/LoadingComponent";
-import { Container, CssBaseline, Grid2 } from "@mui/material";
+import { Container, CssBaseline, Grid2, Paper, useTheme } from "@mui/material";
 import FlashMessage from "@/Components/FlashMessage";
 import {
     Category,
@@ -25,6 +25,7 @@ import {
 } from "@mui/icons-material";
 import { user } from "@/utils/auth";
 import ErrorMessage from "@/Components/ErrorMessage";
+import { PageContainer } from "@toolpad/core";
 const NAVIGATION = [
     {
         segment: "",
@@ -110,7 +111,7 @@ const NAVIGATION = [
     },
 ];
 
-const theme = createTheme({
+const themes = createTheme({
     cssVariables: {
         colorSchemeSelector: "data-toolpad-color-scheme",
     },
@@ -166,12 +167,46 @@ function Layouts({ children }, props) {
             router.on("finish", handleFinish);
         };
     }, []);
+    const [session, setSession] = React.useState({
+        user: {
+            name: user().name,
+            email: user().email,
+            image: user().name,
+        },
+    });
 
+    const authentication = React.useMemo(() => {
+        return {
+            signIn: () => {
+                setSession({
+                    user: {
+                        name: user().name,
+                        email: user().email,
+                        image: user().name,
+                    },
+                });
+            },
+            signOut: () => {
+                router.post(
+                    route("logout"),
+                    {},
+                    {
+                        onSuccess: () => setSession(null),
+                        onerror: (errors) =>
+                            console.log("Logout Failed: ", errors),
+                    },
+                );
+                setSession(null);
+            },
+        };
+    }, []);
     return (
         <AppProvider
+            session={session}
+            authentication={authentication}
             navigation={NAVIGATION}
             router={customRouter}
-            theme={theme}
+            theme={themes}
             window={newWindow}
             branding={{
                 title: `${user().shop.shop_name}`,
@@ -192,6 +227,11 @@ function Layouts({ children }, props) {
                     {isLoading ? (
                         <LoadingComponent />
                     ) : (
+                        // <Paper sx={{ width: "100%" }}>
+                        //     {/* preview-start */}
+                        //     <PageContainer>{children}</PageContainer>
+                        //     {/* preview-end */}
+                        // </Paper>
                         <Container>
                             <Box m="20px">{children}</Box>
                         </Container>

@@ -46,6 +46,7 @@ Route::middleware([
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
+    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
     Route::get("/", [RoutingController::class, "dashboard"])->name("dashboard");
     // Category Routes Starts
     Route::get("/categories", [CategoriesController::class, "index"])->name("category.index");
