@@ -16,7 +16,7 @@ const Sales = ({ sales }) => {
             receipt: item.receipt,
             amount: formatMoney(item.amount),
             paid: formatMoney(item.discounted),
-            discount: item.discount,
+            discount: `${item.discount}%`,
             customer: item.customer?.name,
             shop: item.shops.shop_name,
         };
@@ -71,7 +71,7 @@ const Sales = ({ sales }) => {
 
         {
             field: "discount",
-            headerName: "Discount(%)",
+            headerName: "Discount",
             flex: 1,
             cellClassName: "name-column--cell",
             width: 50,

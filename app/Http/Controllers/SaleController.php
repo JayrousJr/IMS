@@ -87,7 +87,7 @@ class SaleController extends Controller
                 ]);
             }
             DB::commit();
-            return to_route("sale.index")->with("success", "Product has been created successfully");
+            return to_route("sale.index")->with("success", "Product has been Sold successfully");
         } catch (Exception $e) {
             DB::rollBack();
             return to_route("sale.index")->with("error", "Failed to record the sale, an internal error occured");

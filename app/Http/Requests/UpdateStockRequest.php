@@ -28,7 +28,7 @@ class UpdateStockRequest extends FormRequest
             "buying_price" => "required|numeric",
             "selling_price" => "required|numeric",
             "description" => "required|string|min:3|max:1500",
-            "expiry_date" => "required|string",
+            "expiry_date" => "string",
             "available_quantity" => "required|string",
             "reorder_level" => "numeric"
         ];

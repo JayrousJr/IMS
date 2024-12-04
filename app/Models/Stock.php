@@ -26,6 +26,7 @@ class Stock extends Model
         "manufacturer_name",
         "manufacture_date",
         "entry_date",
+        "barcode"
     ];
 
     public function category()

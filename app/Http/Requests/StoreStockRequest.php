@@ -29,11 +29,11 @@ class StoreStockRequest extends FormRequest
             "buying_price" => "required|numeric",
             "selling_price" => "required|numeric",
             "description" => "required|string|min:3|max:1500",
-            "expiry_date" => "required|string",
+            // "expiry_date" => "string",
             "initial_quantity" => "required|string",
             "manufacturer_name" => "required|string",
             "manufacture_date" => "required|string",
-            "entry_date" => "required|string",
+            "entry_date" => "string",
             "batch_no" => "required|string",
         ];
     }

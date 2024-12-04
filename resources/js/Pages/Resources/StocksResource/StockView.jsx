@@ -1,14 +1,24 @@
 import Description from "@/Components/Description";
 import SubmitButton from "@/Components/SubmitButton";
 import Layouts from "@/Layouts/Layouts";
+import formatMoney from "@/utils/formats";
 import { Head, useForm } from "@inertiajs/react";
-import { Box, MenuItem, TextField, useMediaQuery } from "@mui/material";
+import {
+    Box,
+    Card,
+    CardContent,
+    MenuItem,
+    TextField,
+    Typography,
+    useMediaQuery,
+} from "@mui/material";
 import { useState } from "react";
 
-const StockView = ({ stock, categories, suplliers }) => {
+const StockView = ({ stock, categories, suplliers, barcode }) => {
     const [stocks, setStock] = useState(stock?.data);
     const { data, setData, put, processing, errors } = useForm({
         name: stocks?.name,
+        barcode: stocks?.barcode,
         shop_id: stocks?.shop.id,
         description: stocks?.description,
         category_id: stocks?.category.id,
@@ -23,7 +33,31 @@ const StockView = ({ stock, categories, suplliers }) => {
         manufacturer_name: stocks?.manufacturer_name,
         manufacture_date: stocks?.manufacture_date,
         entry_date: stocks?.entry_date,
+        category: stocks?.category.name,
     });
+    const refProduct = [
+        {
+            title: "Name",
+            value: data.name,
+        },
+        {
+            title: "Quantity",
+            value: data.available_quantity,
+        },
+        {
+            title: "Buting Price",
+            value: formatMoney(data.buying_price),
+        },
+
+        {
+            title: "Selling Price",
+            value: formatMoney(data.selling_price),
+        },
+        {
+            title: "Category",
+            value: data.category,
+        },
+    ];
     const isNonMobile = useMediaQuery("(min-width:600px)");
 
     const submit = (e) => {
@@ -34,6 +68,56 @@ const StockView = ({ stock, categories, suplliers }) => {
         <Layouts>
             <Head title="Stock View" />
             <Description title="Stock View" link={null} />
+            <Box m="10px 0 0 0">
+                <section className="section grid grid-cols-4 max-md:grid-cols-2 max-ss:grid-cols-1 my-4 gap-4">
+                    {refProduct.map((item) => (
+                        <Card sx={{ minWidth: 230 }} variant="outlined">
+                            <CardContent>
+                                <Typography
+                                    gutterBottom
+                                    sx={{
+                                        color: "text.secondary",
+                                        fontSize: 14,
+                                    }}
+                                >
+                                    {item.title}
+                                </Typography>
+                                <Typography
+                                    variant="h6"
+                                    component="p"
+                                    className="text-primary"
+                                >
+                                    {item.value}
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    ))}
+                    <Card
+                        sx={{ minWidth: 230, backgroundColor: "white" }}
+                        variant="outlined"
+                    >
+                        <CardContent>
+                            <Typography
+                                gutterBottom
+                                sx={{
+                                    color: "black",
+                                    fontSize: 14,
+                                }}
+                            >
+                                Barcode
+                            </Typography>
+                            <Box>
+                                {/* <img src={barcode} /> */}
+                                <div
+                                    dangerouslySetInnerHTML={{
+                                        __html: barcode,
+                                    }}
+                                />
+                            </Box>
+                        </CardContent>
+                    </Card>
+                </section>
+            </Box>
             <Box m="10px 0 0 0">
                 <form onSubmit={submit}>
                     <Box
@@ -259,7 +343,7 @@ const StockView = ({ stock, categories, suplliers }) => {
                             sx={{ gridColumn: "span 4" }}
                         />
                     </Box>
-                    <SubmitButton title="Create user" processing={processing} />
+                    <SubmitButton title="Create" processing={processing} />
                 </form>
             </Box>
         </Layouts>

@@ -1,11 +1,7 @@
 import { tokens } from "@/constants/colors";
 import { useTheme } from "@emotion/react";
 import { Link } from "@inertiajs/react";
-import {
-    DeleteOutline,
-    PrintOutlined,
-    RemoveRedEye,
-} from "@mui/icons-material";
+import { PrintOutlined, RemoveRedEye } from "@mui/icons-material";
 import { Box, Typography } from "@mui/material";
 import React from "react";
 
@@ -24,6 +20,14 @@ const ButtonComponent = ({ mode, data, routeTo }) => {
                             sx={{
                                 fontSize: "20px",
                                 color: colors.blueAccent[600],
+                            }}
+                        />
+                    )}
+                    {mode === "download" && (
+                        <PrintOutlined
+                            sx={{
+                                fontSize: "20px",
+                                color: colors.greenAccent[600],
                             }}
                         />
                     )}

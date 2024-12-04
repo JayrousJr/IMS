@@ -10,6 +10,7 @@
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
+        "milon/barcode": "^11.0",
         "propaganistas/laravel-phone": "^5.3",
         "spatie/laravel-permission": "^6.9",
         "stancl/tenancy": "^3.8",

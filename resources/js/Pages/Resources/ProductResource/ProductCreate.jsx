@@ -86,7 +86,7 @@ const ProductCreate = ({ stocks }) => {
                             variant="filled"
                             type="text"
                             name="stock_id"
-                            label="Supplier Name"
+                            label="Product Name"
                             select
                             value={data.stock_id}
                             helperText={

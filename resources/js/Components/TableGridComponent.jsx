@@ -38,7 +38,7 @@ const TableGridComponent = ({ rows, columns }) => {
             height="65vh"
             sx={{
                 "& .MuiDataGrid-root": {
-                    border: "none",
+                    border: "1",
                 },
                 "& .MuiDataGrid-cell": {
                     borderBottom: "1",
@@ -55,7 +55,7 @@ const TableGridComponent = ({ rows, columns }) => {
                 },
                 "& .MuiDataGrid-footerContainer": {
                     borderTop: "1",
-                    backgroundColor: colors.grey[800],
+                    // backgroundColor: colors.grey[800],
                 },
                 "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
                     color: `${colors.grey[100]} !important`,

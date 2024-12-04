@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\NumberFormatter;
+use App\Http\Resources\SaleResource;
 use App\Http\Resources\StockResource;
+use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Products;
 use App\Models\Sale;
 use App\Models\SaleDetail;
 use App\Models\Stock;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class RoutingController extends Controller
@@ -30,16 +34,31 @@ class RoutingController extends Controller
             ->orderByDesc('total_sold')
             ->limit(4)                                 // Order by the total sold
             ->get();
-        $outStock = Stock::where("available_quantity", "<=", 20)->get();
 
-        // dd($outStock);
+        $stockDistribution = Stock::with('category')
+            ->select('category_id', DB::raw('COUNT(*) as total_products'))
+            ->groupBy('category_id')
+            ->get()
+            ->map(function ($stock) {
+                return [
+                    'category' => $stock->category->name, // Access category name
+                    'total' => $stock->total_products,
+                ];
+            });
+        $outStock = Stock::where("available_quantity", "<=", 20)->get();
+        $recentSales = Sale::query()->latest()->limit(5)->get();
+        $weekSales = Sale::thisWeek();
+        // dd($weekSales);
         return inertia("Resources/Dashboard", [
             "productCount" => $productCount,
             "salesCount" => $salesCount,
             "topProducts" => $topProducts,
             "outStock" => StockResource::collection($outStock),
             "users" => $users,
-            "customers" => $customers
+            "customers" => $customers,
+            "recentSales" => SaleResource::collection($recentSales),
+            "thisWeekSales" => $weekSales,
+            "stockDistribution" => $stockDistribution,
         ]);
     }
 }

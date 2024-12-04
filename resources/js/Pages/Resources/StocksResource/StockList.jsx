@@ -10,6 +10,9 @@ import NoDataFound from "@/Components/NoDataFound";
 import formatMoney from "@/utils/formats";
 import ExpireComponent from "@/Components/ExpireComponent";
 import QuantityCheck from "@/Components/QuantityCheck";
+import Barcode from "@/Pages/PDF/Barcode";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import { PrintOutlined } from "@mui/icons-material";
 
 const StockList = ({ stocks }) => {
     const theme = useTheme();
@@ -45,6 +48,8 @@ const StockList = ({ stocks }) => {
             buying_price: formatMoney(item.buying_price),
             selling_price: formatMoney(item.selling_price),
             daysToExpire: item.daysToExpire,
+            barcode: item.barcode,
+            barcodeHtml: item.barcodeHtml,
         };
     });
 
@@ -112,6 +117,29 @@ const StockList = ({ stocks }) => {
             maxWidth: 70,
             renderCell: ({ row: { id } }) => (
                 <ButtonComponent data={id} mode="view" routeTo="stock.show" />
+            ),
+        },
+        {
+            field: "Download",
+            headerName: "Pdf",
+            width: 50,
+            minWidth: 50,
+            maxWidth: 70,
+            flex: 1,
+            renderCell: ({ row: { barcode, name, barcodeHtml } }) => (
+                <PDFDownloadLink
+                    document={
+                        <Barcode props={{ barcode, name, barcodeHtml }} />
+                    }
+                    fileName={`${name} barcode`}
+                >
+                    <PrintOutlined
+                        sx={{
+                            fontSize: "20px",
+                            color: colors.greenAccent[600],
+                        }}
+                    />
+                </PDFDownloadLink>
             ),
         },
     ];

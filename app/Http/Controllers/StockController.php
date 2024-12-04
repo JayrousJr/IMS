@@ -12,6 +12,7 @@ use App\Http\Resources\SupplierResource;
 use App\Models\Category;
 use App\Models\Supplier;
 
+use Milon\Barcode\DNS1D;
 use function App\Helpers\shop;
 
 class StockController extends Controller
@@ -53,6 +54,9 @@ class StockController extends Controller
         if (!Shop::find($stock->shop_id) || Shop::find($stock->shop_id) === null) {
             return response()->json(["error" => "Looks like you are not registered to a shop, Invalid Shop ID!"], 422);
         }
+        $barcode = str_pad(mt_rand(1, 999999999999),12,'0', STR_PAD_LEFT);
+        $stock->barcode = $barcode;
+        // dd($stock);
         $stock->save();
         return to_route("stock.index")->with("success", "New Produc has been added to stock successfully");
     }
@@ -63,12 +67,17 @@ class StockController extends Controller
     public function show(Stock $stock, $id)
     {
         $stock = Stock::findOrFail($id);
+        $barcode = new DNS1D();
+        // $barcodeGen = $barcode->getBarcodePNG($stock->barcode, "C128");
+        $barcodeGen = $barcode->getBarcodeSVG($stock->barcode, "EAN13");
         $categories = Category::query()->latest()->get();   
         $suplliers = Supplier::query()->latest()->get();
         return inertia("Resources/StocksResource/StockView", [
             "categories" => CategoriesResource::collection($categories),
             "stock" => new StockResource($stock),
             "suplliers" => SupplierResource::collection($suplliers),
+            // "barcode" => 'data:image/png;base64,'.$barcodeGen
+            "barcode" => 'data:image/png;base64,'.$barcodeGen
         ]);
     }
 

@@ -7,6 +7,7 @@ use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\FianancialStatementCOntroller;
 use App\Http\Controllers\OrdersController;
+use App\Http\Controllers\PDFController;
 use App\Http\Controllers\PermissionsController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RolesController;
@@ -48,6 +49,7 @@ Route::middleware([
 ])->group(function () {
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
     Route::get("/", [RoutingController::class, "dashboard"])->name("dashboard");
+    Route::get('/print_barcode/{barcode}',[PDFController::class,"barcode"])->name("barcode.download");
     // Category Routes Starts
     Route::get("/categories", [CategoriesController::class, "index"])->name("category.index");
     Route::get("/category/{id}", [CategoriesController::class, "destroy"])->name("category.destroy");

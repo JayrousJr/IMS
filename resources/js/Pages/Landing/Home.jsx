@@ -1,7 +1,5 @@
 import Landinglayout from "@/Layouts/Landinglayout";
 import { Head } from "@inertiajs/react";
-import { hero1 } from "@/constants";
-import { hero } from "@/constants";
 import { Hero } from "@/Sections/Hero";
 import Stats from "@/Sections/Stats";
 import Starting from "@/Sections/Starting";

@@ -4,6 +4,7 @@ export default function Button({
     children,
     ...props
 }) {
+    function handleLogout() {}
     return (
         <button
             {...props}
@@ -13,8 +14,8 @@ export default function Button({
                 className === "danger"
                     ? "bg-red-700 text-dark-100 hover:opacity-90"
                     : className === "warning"
-                    ? "bg-orange-500 hover:opacity-90"
-                    : ""
+                      ? "bg-orange-500 hover:opacity-90"
+                      : ""
             }`}
             disabled={disabled}
         >
