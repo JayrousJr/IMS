@@ -9,7 +9,7 @@ class PDFController extends Controller
 {
     function barcode($barcode)  {
         $barcodeData = new DNS1D();
-        $barcodeGen = $barcodeData->getBarcodePNG($barcode, "C128");
+        $barcodeGen = $barcodeData->getBarcodePNG($barcode, "EAN13");
         // dd($barcodeGen);
 
         return inertia("PDF/Barcode",[
